@@ -1,11 +1,11 @@
 package com.soft2242.shop.mapper;
 
-import com.soft2242.shop.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.soft2242.shop.entity.User;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author wg-233
