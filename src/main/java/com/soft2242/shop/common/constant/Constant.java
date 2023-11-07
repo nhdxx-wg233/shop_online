@@ -1,6 +1,6 @@
 package com.soft2242.shop.common.constant;
 
-public class Constant {
+public interface Constant {
     //    创建时间
     String CREATE_TIME = "createTime";
     //    更新时间
