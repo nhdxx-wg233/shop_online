@@ -29,7 +29,8 @@ public class MybatisGen {
         FastAutoGenerator.create("jdbc:mysql://192.168.232.128:3306/shop_online", "root", "1208361250")
                 .globalConfig(builder -> {
                     builder.author("wg-233").enableSwagger(); // 设置作者// 开启 swagger 模式
-
+                    builder.disableOpenDir();
+//                    builder.fileOverride();
                 })
                 .packageConfig(builder -> {
                     builder.parent("com.soft2242") // 设置父包名
