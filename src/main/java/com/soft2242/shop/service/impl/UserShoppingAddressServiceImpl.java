@@ -54,4 +54,10 @@ public class UserShoppingAddressServiceImpl extends ServiceImpl<UserShoppingAddr
         updateById(address);
         return address.getId();
     }
+
+    @Override
+    public List<AddressVO> getAddressList(Integer userId) {
+        List<UserShoppingAddress> list = baseMapper.selectList(new LambdaQueryWrapper<UserShoppingAddress>().eq(UserShoppingAddress::getUserId, userId));
+        return AddressConvert.INSTANCE.convertToAddressVOList(list);
+    }
 }

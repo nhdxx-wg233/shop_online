@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.soft2242.shop.entity.UserShoppingAddress;
 import com.soft2242.shop.vo.AddressVO;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -15,5 +17,5 @@ import com.soft2242.shop.vo.AddressVO;
 public interface UserShoppingAddressService extends IService<UserShoppingAddress> {
     Integer saveShoppingAddress(AddressVO addressVO);
     Integer editShoppingAddress(AddressVO addressVO);
-
+    List<AddressVO> getAddressList(Integer userId);
 }

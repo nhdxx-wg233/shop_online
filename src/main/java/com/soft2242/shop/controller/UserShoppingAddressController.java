@@ -11,11 +11,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.soft2242.shop.common.utils.ObtainUserIdUtils.getUserId;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author wg-233
@@ -37,7 +39,7 @@ public class UserShoppingAddressController {
         return Result.ok(addressId);
     }
 
-        @Operation(summary = "修改收货地址")
+    @Operation(summary = "修改收货地址")
     @PutMapping("address")
     public Result<Integer> editAddress(@RequestBody @Validated AddressVO addressVO, HttpServletRequest request) {
         if (addressVO.getId() == null) {
@@ -46,5 +48,12 @@ public class UserShoppingAddressController {
         addressVO.setUserId(getUserId(request));
         Integer addressId = userShoppingAddressService.editShoppingAddress(addressVO);
         return Result.ok(addressId);
+    }
+
+    @Operation(summary = "收货地址列表")
+    @GetMapping("address")
+    public Result<List<AddressVO>> getAddressList(@RequestParam Integer userId) {
+        List<AddressVO> addressList = userShoppingAddressService.getAddressList(userId);
+        return Result.ok(addressList);
     }
 }
