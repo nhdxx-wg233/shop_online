@@ -28,6 +28,6 @@ public class IndexCarouselServiceImpl extends ServiceImpl<IndexCarouselMapper, I
         }
         wrapper.orderByDesc(IndexCarousel::getCreateTime);
         List<IndexCarousel> list = baseMapper.selectList(wrapper);
-        return null;
+        return list;
     }
 }
