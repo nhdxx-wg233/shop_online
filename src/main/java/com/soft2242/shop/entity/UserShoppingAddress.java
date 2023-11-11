@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName("t_user_shipping_address")
-@ApiModel(value = "UserShippingAddress对象", description = "")
-public class UserShippingAddress {
+@TableName("t_user_shopping_address")
+@ApiModel(value = "UserShoppingAddress对象", description = "")
+public class UserShoppingAddress {
 
     @ApiModelProperty("主键id")
     @TableId(value = "id", type = IdType.AUTO)

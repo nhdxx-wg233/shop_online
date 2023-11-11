@@ -1,6 +1,6 @@
 package com.soft2242.shop.convert;
 
-import com.soft2242.shop.entity.UserShippingAddress;
+import com.soft2242.shop.entity.UserShoppingAddress;
 import com.soft2242.shop.vo.AddressVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,11 +12,11 @@ public interface AddressConvert {
     AddressConvert INSTANCE = Mappers.getMapper(AddressConvert.class);
 
 
-    UserShippingAddress convert(AddressVO addressVO);
+    UserShoppingAddress convert(AddressVO addressVO);
 
 
-    List<AddressVO> convertToAddressVOList(List<UserShippingAddress> addressList);
+    List<AddressVO> convertToAddressVOList(List<UserShoppingAddress> addressList);
 
 
-    AddressVO convertToAddressVO(UserShippingAddress userShippingAddress);
+    AddressVO convertToAddressVO(UserShoppingAddress userShoppingAddress);
 }

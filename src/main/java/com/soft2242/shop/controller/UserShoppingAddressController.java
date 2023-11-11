@@ -2,7 +2,7 @@ package com.soft2242.shop.controller;
 
 import com.soft2242.shop.common.exception.ServerException;
 import com.soft2242.shop.common.result.Result;
-import com.soft2242.shop.service.UserShippingAddressService;
+import com.soft2242.shop.service.UserShoppingAddressService;
 import com.soft2242.shop.vo.AddressVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,15 +25,15 @@ import static com.soft2242.shop.common.utils.ObtainUserIdUtils.getUserId;
 @RestController
 @RequestMapping("member")
 @AllArgsConstructor
-public class UserShippingAddressController {
-    private final UserShippingAddressService userShippingAddressService;
+public class UserShoppingAddressController {
+    private final UserShoppingAddressService userShoppingAddressService;
 
     @Operation(summary = "添加收货地址")
     @PostMapping("address")
     public Result<Integer> saveAddress(@RequestBody @Validated AddressVO addressVO, HttpServletRequest request) {
         Integer userId = getUserId(request);
         addressVO.setUserId(userId);
-        Integer addressId = userShippingAddressService.saveShoppingAddress(addressVO);
+        Integer addressId = userShoppingAddressService.saveShoppingAddress(addressVO);
         return Result.ok(addressId);
     }
 
@@ -44,7 +44,7 @@ public class UserShippingAddressController {
             throw new ServerException("请求参数不能为空");
         }
         addressVO.setUserId(getUserId(request));
-        Integer addressId = userShippingAddressService.editShoppingAddress(addressVO);
+        Integer addressId = userShoppingAddressService.editShoppingAddress(addressVO);
         return Result.ok(addressId);
     }
 }

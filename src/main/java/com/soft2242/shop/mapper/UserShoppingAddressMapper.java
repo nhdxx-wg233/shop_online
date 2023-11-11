@@ -1,7 +1,7 @@
 package com.soft2242.shop.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.soft2242.shop.entity.UserShippingAddress;
+import com.soft2242.shop.entity.UserShoppingAddress;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.soft2242.shop.entity.UserShippingAddress;
  * @author wg-233
  * @since 2023-11-07
  */
-public interface UserShippingAddressMapper extends BaseMapper<UserShippingAddress> {
+public interface UserShoppingAddressMapper extends BaseMapper<UserShoppingAddress> {
 
 }
