@@ -60,4 +60,10 @@ public class UserShoppingAddressServiceImpl extends ServiceImpl<UserShoppingAddr
         List<UserShoppingAddress> list = baseMapper.selectList(new LambdaQueryWrapper<UserShoppingAddress>().eq(UserShoppingAddress::getUserId, userId));
         return AddressConvert.INSTANCE.convertToAddressVOList(list);
     }
+
+    @Override
+    public AddressVO getAddress(Integer id) {
+        UserShoppingAddress address = baseMapper.selectOne(new LambdaQueryWrapper<UserShoppingAddress>().eq(UserShoppingAddress::getId, id));
+        return AddressConvert.INSTANCE.convertToAddressVO(address);
+    }
 }

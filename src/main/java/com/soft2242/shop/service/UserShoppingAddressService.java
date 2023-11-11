@@ -18,4 +18,5 @@ public interface UserShoppingAddressService extends IService<UserShoppingAddress
     Integer saveShoppingAddress(AddressVO addressVO);
     Integer editShoppingAddress(AddressVO addressVO);
     List<AddressVO> getAddressList(Integer userId);
+    AddressVO getAddress(Integer id);
 }

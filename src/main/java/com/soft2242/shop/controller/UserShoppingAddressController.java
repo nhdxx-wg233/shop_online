@@ -56,4 +56,11 @@ public class UserShoppingAddressController {
         List<AddressVO> addressList = userShoppingAddressService.getAddressList(userId);
         return Result.ok(addressList);
     }
+
+    @Operation(summary = "收货地址详情")
+    @GetMapping("address/detail")
+    public Result<AddressVO> getAddress(@RequestParam Integer id) {
+        AddressVO address = userShoppingAddressService.getAddress(id);
+        return Result.ok(address);
+    }
 }
