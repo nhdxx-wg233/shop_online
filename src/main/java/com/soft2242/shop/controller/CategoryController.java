@@ -35,7 +35,7 @@ public class CategoryController {
         return Result.ok(list);
     }
 
-        @GetMapping("top")
+    @GetMapping("top")
     @Operation(summary = "tab分类页-商品分类")
     public Result<List<CategoryVO>> getList() {
         List<CategoryVO> list = categoryService.getCategoryList();
