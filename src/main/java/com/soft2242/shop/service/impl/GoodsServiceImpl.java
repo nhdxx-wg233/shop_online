@@ -12,6 +12,7 @@ import com.soft2242.shop.entity.IndexRecommendTab;
 import com.soft2242.shop.mapper.GoodsMapper;
 import com.soft2242.shop.mapper.IndexRecommendMapper;
 import com.soft2242.shop.mapper.IndexRecommendTabMapper;
+import com.soft2242.shop.query.Query;
 import com.soft2242.shop.query.RecommendByTabGoodsQuery;
 import com.soft2242.shop.service.GoodsService;
 import com.soft2242.shop.vo.IndexTabGoodsVO;
@@ -67,5 +68,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         recommendVO.setCover(indexRecommend.getCover());
         recommendVO.setSubTypes(list);
         return recommendVO;
+    }
+
+    @Override
+    public PageResult<RecommendGoodsVO> getRecommendGoodsByPage(Query query) {
+        Page<Goods> page = new Page<>(query.getPage(), query.getPageSize());
+        Page<Goods> goodsPage = baseMapper.selectPage(page, null);
+        List<RecommendGoodsVO> result = GoodsConvert.INSTANCE.convertToRecommendGoodsVOList(goodsPage.getRecords());
+        return new PageResult<>(page.getTotal(), query.getPageSize(), query.getPage(), page.getPages(), result);
     }
 }
