@@ -6,6 +6,7 @@ import com.soft2242.shop.common.exception.ServerException;
 import com.soft2242.shop.convert.AddressConvert;
 import com.soft2242.shop.entity.UserShoppingAddress;
 import com.soft2242.shop.enums.AddressDefaultEnum;
+import com.soft2242.shop.enums.AddressDeleteFlagEnum;
 import com.soft2242.shop.mapper.UserShoppingAddressMapper;
 import com.soft2242.shop.service.UserShoppingAddressService;
 import com.soft2242.shop.vo.AddressVO;
@@ -65,5 +66,18 @@ public class UserShoppingAddressServiceImpl extends ServiceImpl<UserShoppingAddr
     public AddressVO getAddress(Integer id) {
         UserShoppingAddress address = baseMapper.selectOne(new LambdaQueryWrapper<UserShoppingAddress>().eq(UserShoppingAddress::getId, id));
         return AddressConvert.INSTANCE.convertToAddressVO(address);
+    }
+
+    @Override
+    public void deleteAddress(Integer id) {
+        //逻辑删除,将地址的delete_flag置为1即可
+        UserShoppingAddress address = baseMapper.selectById(id);
+        if (address == null){
+            throw new ServerException("地址不存在");
+        }else if (address.getIsDefault() == AddressDefaultEnum.DEFAULT_ADDRESS.getValue()){
+            throw new ServerException("默认地址不能删除");
+        }else {
+            baseMapper.deleteById(id);
+        }
     }
 }
