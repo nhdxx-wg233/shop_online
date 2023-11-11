@@ -3,11 +3,9 @@ package com.soft2242.shop.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.soft2242.shop.common.utils.DateUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.security.Timestamp;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 public class UserVO {
@@ -27,8 +25,8 @@ public class UserVO {
     @Schema(description = "性别")
     private Integer gender;
     @Schema(description = "生日")
-//    @JsonFormat(pattern = DateUtils.DATE_PATTERN)
-    private LocalDateTime birthday;
+    @JsonFormat(pattern = DateUtils.DATE_PATTERN)
+    private Timestamp birthday;
     @Schema(description = "职业")
     private String profession;
     @Schema(description = "省份编码")

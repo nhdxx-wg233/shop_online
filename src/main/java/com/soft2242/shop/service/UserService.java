@@ -5,6 +5,7 @@ import com.soft2242.shop.entity.User;
 import com.soft2242.shop.query.UserLoginQuery;
 import com.soft2242.shop.vo.LoginResultVO;
 import com.soft2242.shop.vo.UserVO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -37,5 +38,7 @@ public interface UserService extends IService<User> {
      * @return 编辑后的用户信息实体对象
      */
     UserVO editUserInfo(UserVO userVO);
+
+    String editUserAvatar(Integer userId, MultipartFile file);
 
 }
