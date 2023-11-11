@@ -3,9 +3,12 @@ package com.soft2242.shop.common.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ServerException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private int code;
