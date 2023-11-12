@@ -50,7 +50,7 @@ public class UserShoppingAddressServiceImpl extends ServiceImpl<UserShoppingAddr
             if (defaultAddresses.stream().anyMatch(address -> address.getId().equals(addressVO.getId()))) {
                 throw new ServerException("该地址已经是默认地址,请勿重复修改");
             }
-            // 如果存在其他默认地址，则将 convert 设置为非默认地址并抛出异常
+            // 如果存在其他默认地址，则抛出异常
             if (!defaultAddresses.isEmpty()) {
                 throw new ServerException("已存在默认地址,无法将该地址设置为默认地址");
             }
