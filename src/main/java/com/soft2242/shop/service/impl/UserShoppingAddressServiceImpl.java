@@ -100,8 +100,6 @@ public class UserShoppingAddressServiceImpl extends ServiceImpl<UserShoppingAddr
         UserShoppingAddress address = baseMapper.selectById(id);
         if (address == null){
             throw new ServerException("地址不存在");
-        } else if (Objects.equals(address.getIsDefault(), AddressDefaultEnum.DEFAULT_ADDRESS.getValue())) {
-            throw new ServerException("默认地址不能删除");
         }else {
             baseMapper.deleteById(id);
         }
