@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务实现类
@@ -56,5 +58,10 @@ public class UserShoppingCartServiceImpl extends ServiceImpl<UserShoppingCartMap
         cartGoodsVO.setPicture(goods.getCover());
         cartGoodsVO.setDiscount(goods.getDiscount());
         return cartGoodsVO;
+    }
+
+    @Override
+    public List<CartGoodsVO> shopCartList(Integer userId) {
+        return baseMapper.getCartGoodsInfo(userId);
     }
 }

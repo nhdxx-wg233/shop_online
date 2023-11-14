@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static com.soft2242.shop.common.utils.ObtainUserIdUtils.getUserId;
 
 /**
@@ -37,6 +39,14 @@ public class UserShoppingCartController {
         query.setUserId(getUserId(request));
         CartGoodsVO goodsVO = userShoppingCartService.addShopCart(query);
         return Result.ok(goodsVO);
+    }
+
+    @Operation(summary = "获取购物车列表")
+    @PostMapping("list")
+    public Result<List<CartGoodsVO>> shopCartList(HttpServletRequest request) {
+        Integer userId = getUserId(request);
+        List<CartGoodsVO> goodsVOList = userShoppingCartService.shopCartList(userId);
+        return Result.ok(goodsVOList);
     }
 
 }

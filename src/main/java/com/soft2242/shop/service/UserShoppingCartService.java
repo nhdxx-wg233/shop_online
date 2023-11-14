@@ -5,6 +5,8 @@ import com.soft2242.shop.entity.UserShoppingCart;
 import com.soft2242.shop.query.CartQuery;
 import com.soft2242.shop.vo.CartGoodsVO;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -15,4 +17,6 @@ import com.soft2242.shop.vo.CartGoodsVO;
  */
 public interface UserShoppingCartService extends IService<UserShoppingCart> {
     CartGoodsVO addShopCart(CartQuery query);
+
+    List<CartGoodsVO> shopCartList(Integer userId);
 }
