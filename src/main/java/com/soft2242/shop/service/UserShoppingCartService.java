@@ -5,6 +5,7 @@ import com.soft2242.shop.entity.UserShoppingCart;
 import com.soft2242.shop.query.CartQuery;
 import com.soft2242.shop.query.EditCartQuery;
 import com.soft2242.shop.vo.CartGoodsVO;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface UserShoppingCartService extends IService<UserShoppingCart> {
     List<CartGoodsVO> shopCartList(Integer userId);
 
     CartGoodsVO editCart(EditCartQuery query);
+
+    void removeCartGoods(Integer userId, List<Integer> ids);
 }
