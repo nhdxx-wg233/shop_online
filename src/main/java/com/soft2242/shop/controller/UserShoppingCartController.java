@@ -2,6 +2,7 @@ package com.soft2242.shop.controller;
 
 import com.soft2242.shop.common.result.Result;
 import com.soft2242.shop.query.CartQuery;
+import com.soft2242.shop.query.EditCartQuery;
 import com.soft2242.shop.service.UserShoppingCartService;
 import com.soft2242.shop.vo.CartGoodsVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,4 +47,11 @@ public class UserShoppingCartController {
         return Result.ok(goodsVOList);
     }
 
+    @Operation(summary = "修改购物车单品")
+    @PutMapping("edit")
+    public Result<CartGoodsVO> editShopCart(@RequestBody @Validated EditCartQuery query) {
+        CartGoodsVO goodsVO = userShoppingCartService.editCart(query);
+        return Result.ok(goodsVO);
+
+    }
 }

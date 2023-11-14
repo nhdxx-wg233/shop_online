@@ -7,6 +7,7 @@ import com.soft2242.shop.entity.UserShoppingCart;
 import com.soft2242.shop.mapper.GoodsMapper;
 import com.soft2242.shop.mapper.UserShoppingCartMapper;
 import com.soft2242.shop.query.CartQuery;
+import com.soft2242.shop.query.EditCartQuery;
 import com.soft2242.shop.service.UserShoppingCartService;
 import com.soft2242.shop.vo.CartGoodsVO;
 import lombok.AllArgsConstructor;
@@ -63,5 +64,33 @@ public class UserShoppingCartServiceImpl extends ServiceImpl<UserShoppingCartMap
     @Override
     public List<CartGoodsVO> shopCartList(Integer userId) {
         return baseMapper.getCartGoodsInfo(userId);
+    }
+
+    @Override
+    public CartGoodsVO editCart(EditCartQuery query) {
+        UserShoppingCart userShoppingCart = baseMapper.selectById(query.getId());
+        if (userShoppingCart == null){
+            throw new ServerException("购物车信息不存在");
+        }
+        userShoppingCart.setCount(query.getCount());
+        userShoppingCart.setSelected(query.getSelected());
+        baseMapper.updateById(userShoppingCart);
+
+        Goods goods = goodsMapper.selectById(userShoppingCart.getGoodsId());
+        if (query.getCount()>goods.getInventory()){
+            throw new ServerException("库存不足");
+        }
+        CartGoodsVO cartGoodsVO = new CartGoodsVO();
+        cartGoodsVO.setId(userShoppingCart.getId());
+        cartGoodsVO.setName(goods.getName());
+        cartGoodsVO.setAttrsText(userShoppingCart.getAttrsText());
+        cartGoodsVO.setPrice(userShoppingCart.getPrice());
+        cartGoodsVO.setNowPrice(goods.getPrice());
+        cartGoodsVO.setSelected(userShoppingCart.getSelected());
+        cartGoodsVO.setStock(goods.getInventory());
+        cartGoodsVO.setCount(query.getCount());
+        cartGoodsVO.setPicture(goods.getCover());
+        cartGoodsVO.setDiscount(goods.getDiscount());
+        return cartGoodsVO;
     }
 }
