@@ -18,7 +18,11 @@ public interface UserConvert {
 
     UserConvert INSTANCE = Mappers.getMapper(UserConvert.class);
 
-    @Mapping(expression = "java(MapStruct.transferTimeStamp(entity.getBirthday()))", target = "birthday")
+    @Mapping(dateFormat = "yyyy-MM-dd", target = "birthday")
+    @Mapping(target = "provinceCode", expression = "java(entity.getProvinceCode().isEmpty()?null:entity.getProvinceCode())")
+    @Mapping(target = "cityCode", expression = "java(entity.getCityCode().isEmpty()?null:entity.getCityCode())")
+    @Mapping(target = "countyCode", expression = "java(entity.getCountyCode().isEmpty()?null:entity.getCountyCode())")
+    @Mapping(target = "profession", expression = "java(entity.getProfession()==null?null:entity.getProfession())")
     User convert(UserVO entity);
 
 
