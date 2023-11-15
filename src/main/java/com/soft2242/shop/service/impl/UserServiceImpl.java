@@ -72,7 +72,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setAccount(account);
             user.setNickname(account);
             user.setOpenId(openId);
-            user.setMobile("''");
             baseMapper.insert(user);
         }
         System.out.println(user);
