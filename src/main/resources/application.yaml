@@ -36,6 +36,7 @@ knife4j:
   enable: true
   setting:
     language: zh-CN
+  production: ${KNIFE4J_PRODUCTION} #生产环境
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
