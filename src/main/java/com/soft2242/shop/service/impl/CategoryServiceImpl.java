@@ -34,7 +34,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public List<Category> getIndexCategoryList() {
         LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Category::getIsRecommend, CategoryRecommendEnum.ALL_RECOMMEND.getValue());
+//        查询首页和分类页都推荐的分类以及在首页推荐的分类
+        wrapper.eq(Category::getIsRecommend, CategoryRecommendEnum.ALL_RECOMMEND.getValue()).or().eq(Category::getIsRecommend, CategoryRecommendEnum.INDEX_RECOMMEND.getValue());
         wrapper.orderByDesc(Category::getCreateTime);
         List<Category> list = baseMapper.selectList(wrapper);
         return list;
