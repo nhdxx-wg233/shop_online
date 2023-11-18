@@ -37,7 +37,7 @@ public class GoodsController {
     }
 
     @Operation(summary = "首页-猜你喜欢")
-    @PostMapping("gussLike")
+    @PostMapping("guessLike")
     public Result<PageResult<RecommendGoodsVO>> getRecommendGoodsByPage(@RequestBody @Validated Query query) {
         PageResult<RecommendGoodsVO> result = goodsService.getRecommendGoodsByPage(query);
         return Result.ok(result);
