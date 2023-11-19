@@ -1,0 +1,61 @@
+version: '3'
+
+volumes:
+  mysql_data:
+
+networks:
+  my_network:
+    driver: bridge
+
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - my_network
+
+  mysql:
+    build:
+      dockerfile: Dockerfile-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    networks:
+      - my_network
+    command:
+      - --character-set-server=utf8mb4
+      - --collation -server=utf8mb4_unicode_ci
+      - --lower-case-table-names=1
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  shop-online:
+    image: shop-online:latest
+    restart: always
+    environment:
+      - ALIYUN_ACCESS_KEY_ID
+      - ALIYUN_ACCESS_KEY_SECRET
+      - FILE_BUCKET_NAME
+      - FILE_ENDPOINT
+      - FILE_OBJECT_NAME
+      - KNIFE4J_PRODUCTION
+      - MYSQL_DATABASE
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD
+      - MYSQL_PORT
+      - MYSQL_USER
+      - REDIS_DATABASE
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD
+      - REDIS_PORT
+      - REDIS_USERNAME
+      - WX_APP_ID
+      - WX_APP_SECRET
+    ports:
+      - "8088:8088"
+    networks:
+      - my_network
+    depends_on:
+      - mysql
+      - redis
