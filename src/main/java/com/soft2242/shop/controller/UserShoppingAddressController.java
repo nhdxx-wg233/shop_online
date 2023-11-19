@@ -52,7 +52,8 @@ public class UserShoppingAddressController {
 
     @Operation(summary = "收货地址列表")
     @GetMapping("address")
-    public Result<List<AddressVO>> getAddressList(@RequestParam Integer userId) {
+    public Result<List<AddressVO>> getAddressList(HttpServletRequest request) {
+        Integer userId = getUserId(request);
         List<AddressVO> addressList = userShoppingAddressService.getAddressList(userId);
         return Result.ok(addressList);
     }
