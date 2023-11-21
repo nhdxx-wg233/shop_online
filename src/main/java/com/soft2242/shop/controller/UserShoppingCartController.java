@@ -41,7 +41,7 @@ public class UserShoppingCartController {
     }
 
     @Operation(summary = "获取购物车列表")
-    @PostMapping("list")
+    @GetMapping("list")
     public Result<List<CartGoodsVO>> shopCartList(HttpServletRequest request) {
         Integer userId = getUserId(request);
         List<CartGoodsVO> goodsVOList = userShoppingCartService.shopCartList(userId);
