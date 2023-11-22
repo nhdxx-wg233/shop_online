@@ -17,10 +17,6 @@ RUN yum update -y && \
 
 ADD ./ .
 
-RUN mvn -version
-
-RUN mvn dependency:resolve
-
 RUN mvn package -DskipTests
 
 FROM bellsoft/liberica-openjdk-centos:17

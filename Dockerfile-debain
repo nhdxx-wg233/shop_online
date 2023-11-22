@@ -11,8 +11,6 @@ RUN apt-get update && \
 
 ADD ./ .
 
-RUN mvn dependency:resolve
-
 RUN mvn package -DskipTests
 
 FROM bellsoft/liberica-openjdk-debian:17
