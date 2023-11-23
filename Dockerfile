@@ -1,13 +1,6 @@
-FROM bellsoft/liberica-openjdk-debian:17
+FROM maven:3.9.5-eclipse-temurin-17
 
 WORKDIR /app
-
-RUN apt-get update && \
-    apt-get install -y \
-        maven \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
 ADD ./ .
 
