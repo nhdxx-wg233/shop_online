@@ -10,6 +10,7 @@ import com.soft2242.shop.convert.UserOrderDetailConvert;
 import com.soft2242.shop.entity.*;
 import com.soft2242.shop.enums.OrderStatusEnum;
 import com.soft2242.shop.mapper.*;
+import com.soft2242.shop.query.CancelGoodsQuery;
 import com.soft2242.shop.query.OrderGoodsQuery;
 import com.soft2242.shop.query.OrderPreQuery;
 import com.soft2242.shop.query.OrderQuery;
@@ -354,5 +355,41 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
             list.add(orderDetailVO);
         }
         return new PageResult<>(page.getTotal(), query.getPageSize(), query.getPage(), page.getPages(), list);
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param query
+     * @return
+     */
+    @Override
+    public OrderDetailVO cancelOrder(CancelGoodsQuery query) {
+//        1、查询订单是否存在
+        UserOrder userOrder = baseMapper.selectById(query.getId());
+        if (userOrder == null) {
+            throw new ServerException("订单信息不存在");
+        }
+//       2、只有是未付款的订单才能取消
+        if (!Objects.equals(userOrder.getStatus(), OrderStatusEnum.WAITING_FOR_PAYMENT.getValue())) {
+            throw new ServerException("订单已付款，取消失败");
+        }
+//       3、修改订单状态
+        userOrder.setStatus(OrderStatusEnum.CANCELLED.getValue());
+        userOrder.setCancelReason(query.getCancelReason());
+        userOrder.setCloseTime(LocalDateTime.now());
+        baseMapper.updateById(userOrder);
+        OrderDetailVO orderDetailVO = UserOrderDetailConvert.INSTANCE.convertToOrderDetailVO(userOrder);
+//        4、查询订单地址信息
+        UserShoppingAddress userShippingAddress = userShoppingAddressMapper.selectById(userOrder.getAddressId());
+        if (userShippingAddress != null) {
+            orderDetailVO.setReceiverContact(userShippingAddress.getReceiver());
+            orderDetailVO.setReceiverAddress(userShippingAddress.getAddress());
+            orderDetailVO.setReceiverMobile(userShippingAddress.getContact());
+        }
+//        5、查询购买的商品列表返回给客户端
+        List<UserOrderGoods> goodsList = userOrderGoodsMapper.selectList(new LambdaQueryWrapper<UserOrderGoods>().eq(UserOrderGoods::getOrderId, userOrder.getId()));
+        orderDetailVO.setSkus(goodsList);
+        return orderDetailVO;
     }
 }
