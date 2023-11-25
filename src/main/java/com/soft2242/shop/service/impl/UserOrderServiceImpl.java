@@ -112,6 +112,7 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
             userOrderGoods.setAttrsText(goodsVO.getSkus());
             userOrderGoods.setFreight(goods.getFreight());
             userOrderGoods.setPrice(goods.getPrice());
+            userOrderGoods.setOrderId(userOrder.getId());
 
             BigDecimal freight = new BigDecimal(userOrderGoods.getFreight().toString());
             BigDecimal goodsPrice = new BigDecimal(userOrderGoods.getPrice().toString());
