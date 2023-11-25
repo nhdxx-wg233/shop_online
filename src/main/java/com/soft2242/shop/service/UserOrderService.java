@@ -9,6 +9,9 @@ import com.soft2242.shop.query.OrderQuery;
 import com.soft2242.shop.vo.OrderDetailVO;
 import com.soft2242.shop.vo.SubmitOrderVO;
 import com.soft2242.shop.vo.UserOrderVO;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -39,11 +42,19 @@ public interface UserOrderService extends IService<UserOrder> {
      * @return
      */
     PageResult<OrderDetailVO> getOrderList(OrderQuery query);
-        /**
+
+    /**
      * 取消订单
      *
      * @param query
      * @return
      */
     OrderDetailVO cancelOrder(CancelGoodsQuery query);
+
+    /**
+     * 删除订单
+     *
+     * @param ids
+     */
+    void deleteOrder(List<Integer> ids, Integer userId);
 }

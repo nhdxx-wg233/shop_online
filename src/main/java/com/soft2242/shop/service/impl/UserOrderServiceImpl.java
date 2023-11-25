@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -391,5 +392,32 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
         List<UserOrderGoods> goodsList = userOrderGoodsMapper.selectList(new LambdaQueryWrapper<UserOrderGoods>().eq(UserOrderGoods::getOrderId, userOrder.getId()));
         orderDetailVO.setSkus(goodsList);
         return orderDetailVO;
+    }
+
+    /**
+     * 删除订单
+     *
+     * @param ids
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOrder(List<Integer> ids, Integer userId) {
+//        仅在订单状态为 待评价、已完成、已取消时，可删除订单
+        LambdaQueryWrapper<UserOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserOrder::getUserId, userId);
+        wrapper.eq(UserOrder::getStatus, OrderStatusEnum.WAITING_FOR_REVIEW.getValue()).or().eq(UserOrder::getStatus, OrderStatusEnum.COMPLETED.getValue()).or().eq(UserOrder::getStatus, OrderStatusEnum.CANCELLED.getValue());
+        List<UserOrder> userOrders = baseMapper.selectList(wrapper);
+//        将查询到的订单和要删除的订单列表取交集，避免误删订单
+        List<UserOrder> list = userOrders.stream().filter(item -> ids.contains(item.getId())).collect(Collectors.toList());
+//        当可删除的订单集合长度为0时，抛出暂无可删除订单的异常
+        if (list.isEmpty()) {
+            throw new ServerException("暂无可以删除的订单");
+        }
+//        删除订单信息
+        removeByIds(list);
+//       删除购买的商品信息
+        for (UserOrder userOrder : list) {
+            userOrderGoodsMapper.delete(new LambdaQueryWrapper<UserOrderGoods>().eq(UserOrderGoods::getOrderId, userOrder.getId()));
+        }
     }
 }
