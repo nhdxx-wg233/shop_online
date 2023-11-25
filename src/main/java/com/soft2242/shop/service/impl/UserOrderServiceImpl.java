@@ -2,25 +2,16 @@ package com.soft2242.shop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.generator.IFill;
 import com.soft2242.shop.common.exception.ServerException;
+import com.soft2242.shop.convert.UserAddressConvert;
 import com.soft2242.shop.convert.UserOrderDetailConvert;
-import com.soft2242.shop.entity.Goods;
-import com.soft2242.shop.entity.UserOrder;
-import com.soft2242.shop.entity.UserOrderGoods;
-import com.soft2242.shop.entity.UserShoppingAddress;
+import com.soft2242.shop.entity.*;
 import com.soft2242.shop.enums.OrderStatusEnum;
-import com.soft2242.shop.mapper.GoodsMapper;
-import com.soft2242.shop.mapper.UserOrderGoodsMapper;
-import com.soft2242.shop.mapper.UserOrderMapper;
-import com.soft2242.shop.mapper.UserShoppingAddressMapper;
+import com.soft2242.shop.mapper.*;
 import com.soft2242.shop.query.OrderGoodsQuery;
 import com.soft2242.shop.service.UserOrderGoodsService;
 import com.soft2242.shop.service.UserOrderService;
-import com.soft2242.shop.service.UserShoppingAddressService;
-import com.soft2242.shop.vo.OrderDetailVO;
-import com.soft2242.shop.vo.UserOrderVO;
-import lombok.AllArgsConstructor;
+import com.soft2242.shop.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -49,15 +40,23 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder> implements UserOrderService {
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
     @Autowired
     private GoodsMapper goodsMapper;
+
     @Autowired
     private UserOrderGoodsService userOrderGoodsService;
+
     @Autowired
     private UserShoppingAddressMapper userShoppingAddressMapper;
+
     @Autowired
     private UserOrderGoodsMapper userOrderGoodsMapper;
+
     private ScheduledFuture<?> cancelTask;
+
+    @Autowired
+    private UserShoppingCartMapper userShoppingCartMapper;
 
     @Async
     public void scheduleOrderCancel(UserOrder userOrder) {
@@ -167,5 +166,82 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
         }
 
         return orderDetailVO;
+    }
+
+    public List<UserAddressVO> getAddressListByUserId(Integer userId, Integer addressId) {
+        List<UserShoppingAddress> list = userShoppingAddressMapper.selectList(new LambdaQueryWrapper<UserShoppingAddress>().eq(UserShoppingAddress::getUserId, userId));
+        UserShoppingAddress userShippingAddress = null;
+        UserAddressVO userAddressVO;
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        if (addressId != null) {
+            userShippingAddress = list.stream().filter(item -> item.getId().equals(addressId)).toList().get(0);
+            list.remove(userShippingAddress);
+        }
+        List<UserAddressVO> addressList = UserAddressConvert.INSTANCE.convertToUserAddressVOList(list);
+        if (userShippingAddress != null) {
+            userAddressVO = UserAddressConvert.INSTANCE.convertToUserAddressVO(userShippingAddress);
+            userAddressVO.setSelected(true);
+            addressList.add(userAddressVO);
+        }
+
+        return addressList;
+    }
+
+    @Override
+    public SubmitOrderVO getPreOrderDetail(Integer userId) {
+
+        SubmitOrderVO submitOrderVO = new SubmitOrderVO();
+        List<UserShoppingCart> cartList = userShoppingCartMapper.selectList(new LambdaQueryWrapper<UserShoppingCart>().eq(UserShoppingCart::getUserId, userId).eq(UserShoppingCart::getSelected, true));
+        if (cartList.isEmpty()) {
+            return null;
+        }
+
+        List<UserAddressVO> addressList = getAddressListByUserId(userId, null);
+
+        BigDecimal totalPrice = new BigDecimal(0);
+        Integer totalCount = 0;
+        BigDecimal totalPayPrice = new BigDecimal(0);
+        BigDecimal totalFreight = new BigDecimal(0);
+
+        List<UserOrderGoodsVO> goodList = new ArrayList<>();
+        for (UserShoppingCart shoppingCart : cartList) {
+            Goods goods = goodsMapper.selectById(shoppingCart.getGoodsId());
+            UserOrderGoodsVO userOrderGoodsVO = new UserOrderGoodsVO();
+            userOrderGoodsVO.setId(goods.getId());
+            userOrderGoodsVO.setName(goods.getName());
+            userOrderGoodsVO.setPicture(goods.getCover());
+            userOrderGoodsVO.setCount(shoppingCart.getCount());
+            userOrderGoodsVO.setAttrsText(shoppingCart.getAttrsText());
+            userOrderGoodsVO.setPrice(goods.getOldPrice());
+            userOrderGoodsVO.setPayPrice(goods.getPrice());
+            userOrderGoodsVO.setTotalPrice(goods.getFreight() + goods.getPrice() * shoppingCart.getCount());
+            userOrderGoodsVO.setTotalPayPrice(userOrderGoodsVO.getTotalPrice());
+
+            BigDecimal freight = new BigDecimal(goods.getFreight().toString());
+            BigDecimal goodsPrice = new BigDecimal(goods.getPrice().toString());
+            BigDecimal count = new BigDecimal(shoppingCart.getCount().toString());
+
+            BigDecimal price = goodsPrice.multiply(count).add(freight);
+
+            totalPrice = totalPrice.add(price);
+            totalCount += userOrderGoodsVO.getCount();
+            totalPayPrice = totalPayPrice.add(new BigDecimal(userOrderGoodsVO.getTotalPayPrice().toString()));
+            totalFreight = totalFreight.add(freight);
+            goodList.add(userOrderGoodsVO);
+        }
+
+        OrderInfoVO orderInfoVO = new OrderInfoVO();
+        orderInfoVO.setGoodsCount(totalCount);
+        orderInfoVO.setTotalPayPrice(totalPayPrice.doubleValue());
+        orderInfoVO.setTotalPrice(totalPrice.doubleValue());
+        orderInfoVO.setPostFee(totalFreight.doubleValue());
+
+        submitOrderVO.setUserAddresses(addressList);
+        submitOrderVO.setGoods(goodList);
+        submitOrderVO.setSummary(orderInfoVO);
+        return submitOrderVO;
     }
 }
