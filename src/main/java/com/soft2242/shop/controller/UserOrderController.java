@@ -106,4 +106,14 @@ public class UserOrderController {
         userOrderService.deleteOrder(ids, userId);
         return Result.ok();
     }
+
+    @Operation(summary = "模拟发货")
+    @GetMapping("consignment")
+    public Result consignOrder(@RequestParam Integer id) {
+        if (id == null) {
+            throw new ServerException("订单不存在");
+        }
+        userOrderService.consignOrder(id);
+        return Result.ok();
+    }
 }

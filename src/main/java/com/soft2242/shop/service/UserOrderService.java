@@ -9,7 +9,6 @@ import com.soft2242.shop.query.OrderQuery;
 import com.soft2242.shop.vo.OrderDetailVO;
 import com.soft2242.shop.vo.SubmitOrderVO;
 import com.soft2242.shop.vo.UserOrderVO;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -57,4 +56,12 @@ public interface UserOrderService extends IService<UserOrder> {
      * @param ids
      */
     void deleteOrder(List<Integer> ids, Integer userId);
+
+    /**
+     * 模拟发货
+     *
+     * @param id
+     * @return
+     */
+    void consignOrder(Integer id);
 }
