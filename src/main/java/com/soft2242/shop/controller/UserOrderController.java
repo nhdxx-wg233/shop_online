@@ -60,7 +60,7 @@ public class UserOrderController {
         return Result.ok(preOrderDetail);
     }
 
-    @Operation(summary = "填写订单-获取立即购买订单")
+    @Operation(summary = "填写订单 - 获取立即购买订单")
     @PostMapping("pre/now")
     public Result<SubmitOrderVO> getPreNowOrderDetail(@RequestBody @Validated OrderPreQuery query, HttpServletRequest request) {
         query.setUserId(getUserId(request));
@@ -68,4 +68,13 @@ public class UserOrderController {
         return Result.ok(preNowOrderDetail);
     }
 
+    @Operation(summary = "填写订单 - 获取再次购买订单")
+    @GetMapping("/repurchase")
+    public Result<SubmitOrderVO> getRepurchaseOrderDetail(@RequestParam Integer id) {
+        if (id == null) {
+            throw new ServerException("请求参数异常");
+        }
+        SubmitOrderVO repurchaseOrderDetail = userOrderService.getRepurchaseOrderDetail(id);
+        return Result.ok(repurchaseOrderDetail);
+    }
 }

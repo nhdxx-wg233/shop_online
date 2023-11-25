@@ -290,4 +290,26 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
         submitOrderVO.setSummary(orderInfoVO);
         return submitOrderVO;
     }
+
+        @Override
+    public SubmitOrderVO getRepurchaseOrderDetail(Integer id) {
+        SubmitOrderVO submitOrderVO = new SubmitOrderVO();
+
+        UserOrder userOrder = baseMapper.selectById(id);
+
+        List<UserAddressVO> addressList = getAddressListByUserId(userOrder.getUserId(), userOrder.getAddressId());
+
+        List<UserOrderGoodsVO> goodsList = goodsMapper.getGoodsListByOrderId(id);
+
+        OrderInfoVO orderInfoVO = new OrderInfoVO();
+        orderInfoVO.setGoodsCount(userOrder.getTotalCount());
+        orderInfoVO.setTotalPrice(userOrder.getTotalPrice());
+        orderInfoVO.setPostFee(userOrder.getTotalFreight());
+        orderInfoVO.setTotalPayPrice(userOrder.getTotalPrice());
+        orderInfoVO.setDiscountPrice(0.00);
+        submitOrderVO.setUserAddresses(addressList);
+        submitOrderVO.setGoods(goodsList);
+        submitOrderVO.setSummary(orderInfoVO);
+        return submitOrderVO;
+    }
 }

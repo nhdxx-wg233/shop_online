@@ -26,4 +26,6 @@ public interface UserOrderService extends IService<UserOrder> {
     SubmitOrderVO getPreOrderDetail(Integer userId);
 
     SubmitOrderVO getPreNowOrderDetail(OrderPreQuery query);
+
+    SubmitOrderVO getRepurchaseOrderDetail(Integer id);
 }
