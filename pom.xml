@@ -126,6 +126,7 @@
     </dependencies>
 
     <build>
+        <finalName>shop_online_api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
